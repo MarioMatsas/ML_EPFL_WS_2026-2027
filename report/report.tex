@@ -19,7 +19,7 @@
 \title{Coronary Heart Disease Prediction from Survey Data}
 
 \author{
-\IEEEauthorblockN{[Team member 1], [Team member 2], [Team member 3]}
+\IEEEauthorblockN{Mario Matsas, Ioanna Poulou, Abdullah Rehman}
 \IEEEauthorblockA{CS-433 Machine Learning, EPFL, Switzerland}
 
 
@@ -67,7 +67,7 @@ single-sample stochastic gradient descent (SGD), or the closed-form
 normal equations. Ridge regression introduces a $\lambda\|w\|^2$
 penalty and solves $(X^\top X+2N\lambda I)w=X^\top y$. Logistic
 regression is optimised by GD, both with and without this penalty.
-Targets are represented as $\{0,1\}$; continuous model outputs are
+Targets are represented as $\{0,1\}$. Continuous model outputs are
 subsequently thresholded to obtain binary predictions.
 
 \subsection{Survey data characteristics}
@@ -93,8 +93,7 @@ missing observations.
 \item \emph{Non-response handling.} Field-specific missing-value codes
 are identified using training observations: 77/99 when available,
 otherwise 777/999, otherwise 7/9, except where the codebook identifies
-7 as a legitimate category. These responses are treated as missing;
-code 88 (``none'') is recoded to zero for count variables.
+7 as a legitimate category. These responses are treated as missing.
 \item \emph{Feature representation.} The 180 categorical fields
 (nominal, or containing at most ten levels) use $k-1$ dummy variables
 and include missingness as an explicit category. Seven ordinal and
@@ -129,7 +128,7 @@ using 95\% intervals. All experiments are reproducible through
 \caption{Hold-out comparison of linear methods and five-fold CV
 F1 (mean $\pm$ standard deviation), all in \%. All models use 836
 features except the minimal baseline. Logistic models use $\gamma=0.3$
-and $T=1000$ (selected variant: $\gamma=0.6$, $T=3000$); regularised
+and $T=1000$ (selected variant: $\gamma=0.6$, $T=3000$) regularised
 models use $\lambda=10^{-4}$}
 \label{tab:methods}
 \footnotesize
@@ -139,7 +138,7 @@ models use $\lambda=10^{-4}$}
 Method & F1 & Prec. & Rec. & Acc. & CV F1\\
 \midrule
 Majority class                & 0.0  & --   & 0.0  & 90.9 & --\\
-Least squares (normal eq.)    & \multicolumn{5}{c}{non-unique; $X^\top X$ singular}\\
+Least squares (normal eq.)    & \multicolumn{5}{c}{non-unique $X^\top X$ singular}\\
 Least squares (GD)            & 42.7 & 34.5 & 56.0 & 86.4 & --\\
 Least squares (SGD)           & 42.7 & 35.3 & 53.9 & 86.9 & --\\
 Ridge regression              & 42.5 & 35.5 & 53.0 & 87.0 & \cvRidge\\
@@ -155,8 +154,8 @@ Reg.\ logistic (minimal)      & 42.3 & 35.6 & 52.0 & 87.1 & \cvMin\\
 \begin{table}[tbp]
 \centering
 \caption{Single-component ablations on the hold-out split
-(regularised logistic regression; $\lambda=10^{-4}$, $\gamma=0.3$,
-$T=1000$). Differences in F1 are measured against the full pipeline;
+(regularised logistic regression $\lambda=10^{-4}$, $\gamma=0.3$,
+$T=1000$). Differences in F1 are measured against the full pipeline
 brackets give 95\% paired bootstrap intervals}
 \label{tab:ablation}
 \footnotesize
@@ -190,11 +189,9 @@ by only 0.1 points for $\lambda\in[10^{-6},10^{-2}]$.
 With 262{,}508 training examples and 837 parameters, training F1 (43.1)
 is below validation F1, providing limited evidence of overfitting.
 The remaining error may instead reflect restricted linear expressiveness.
-These results suggest that the objective function matters more than
-the optimisation procedure.
 
 For $\gamma\le 0.3$, increasing $\gamma T$ raises validation F1 until
-performance stabilises at 43.9--44.3 for $\gamma T\ge 300$;
+performance stabilises at 43.9--44.3 for $\gamma T\ge 300$
 varying $\lambda$ changes F1 by at most 0.2 points. By contrast, five
 of nine runs at $\gamma=0.6$ achieve only F1 26--35. Since logistic-loss
 curvature is bounded by $L/4$, a standard GD convergence guarantee
@@ -235,8 +232,8 @@ marker indicates the training-selected operating point ($t=0.192$)}
 \end{figure}
 
 Figure~\ref{fig:threshold} illustrates the effect of operating point across evaluation metrics.
-At $t=0.5$, only 2.3\% of respondents receive a positive prediction;
-recall is approximately 15\% and F1 is 23.9, notwithstanding accuracy
+At $t=0.5$, only 2.3\% of respondents receive a positive prediction.
+Recall is approximately 15\% and F1 is 23.9, notwithstanding accuracy
 near its maximum of 91.4\%. Around $t=0.2$, F1 reaches its optimum,
 with approximately 36\% precision and 56\% recall. The threshold
 estimated from training predictions closely matches this operating
