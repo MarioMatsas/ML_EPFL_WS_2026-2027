@@ -73,10 +73,8 @@ subsequently thresholded to obtain binary predictions.
 \subsection{Survey data characteristics}
 Conditional question routing produces substantial missingness: 99 of 321
 variables are unobserved for at least 90\% of respondents. Such patterns
-may carry predictive information. Four variables are constant whenever
-observed, but their observation patterns distinguish landline from
-cell-phone interviews. MICHD prevalence is 10.7\% among landline and
-6.2\% among cell-phone respondents. Additionally, 273 variables contain
+may carry predictive information. Six variables are constant whenever
+observed. Additionally, 273 variables contain
 codes including 7, 9, 77, and 99. These frequently indicate
 ``don't know'' or ``refused'', although meanings depend on the field:
 for example, income code 7 represents the \$50--75k category.
@@ -86,11 +84,11 @@ observations and introduce systematic errors into feature construction.
 \subsection{Feature preprocessing}
 Preprocessing parameters are estimated exclusively from training data.
 \begin{enumerate}
-\item \emph{Variable exclusion.} We discard 70 fields: 18 describing
-interview administration rather than respondents (e.g.\ dates or survey
-weights), 11 redundant or almost empty variables, 14 raw unit-encoded
-answers with existing decoded equivalents (e.g.\ 107 represents seven
-days weekly in \texttt{ALCDAY5}), and 27 fields with at least 99\%
+\item \emph{Variable exclusion.} We discard 43 fields by hand: 18 describing interview administration
+rather than respondents (e.g.\ dates or survey weights), 11 redundant
+or almost empty variables, and 14 raw unit-encoded answers with
+existing decoded equivalents (e.g.\ 107 encodes seven days per week in
+\texttt{ALCDAY5}). We additionally drop 27 fields with at least 99\%
 missing observations.
 \item \emph{Non-response handling.} Field-specific missing-value codes
 are identified using training observations: 77/99 when available,
@@ -101,12 +99,10 @@ code 88 (``none'') is recoded to zero for count variables.
 (nominal, or containing at most ten levels) use $k-1$ dummy variables
 and include missingness as an explicit category. Seven ordinal and
 60 continuous fields are median-imputed, standardised, and accompanied
-by missingness indicators. Four constant-valued fields are represented
+by missingness indicators. Six constant-valued fields are represented
 solely through their observation indicators.
 \end{enumerate}
-The resulting design matrix contains 836 features plus an intercept.
-For comparison, minimal preprocessing applies median imputation and
-standardisation to 315 non-constant original variables.
+
 
 \subsection{Experimental protocol}
 For the positive class, precision is $P=TP/(TP+FP)$, recall is
@@ -262,8 +258,7 @@ variables. An earlier pipeline using shared non-response codes across
 variables yields nearly identical performance. Across all five CV folds,
 the full pipeline exceeds the minimal baseline by 0.9--1.8 points.
 Because the selected hold-out split is relatively favourable, aggregate
-CV performance provides a more representative comparison. The AIcrowd
-test-set score is omitted until a verified F1 is available.
+CV performance provides a more representative comparison. 
 
 \section{Discussion and Conclusion}
 The largest-magnitude coefficients correspond to sex, age, prior stroke,
@@ -273,11 +268,7 @@ to respondents with associated health profiles, although coefficients
 do not establish causal relationships. Similar F1 scores across the
 linear estimators suggest that additional improvements may depend on
 nonlinear structure or interaction features rather than hyperparameter
-adjustments alone. Two methodological limitations persist: 30 numerical
-variables retain upper values resembling non-response codes (e.g.\ 99
-in \texttt{HHADULT}), and the component ablations use a single
-hold-out split, rendering differences below approximately 0.3 points
-statistically uncertain. Overall, survey-aware preprocessing improves
+adjustments alone. Overall, survey-aware preprocessing improves
 cross-validated F1 by roughly 1.5 points, while decision-threshold
 selection yields an improvement of approximately 20 points.
 Independent external validation remains necessary before deployment in
@@ -291,3 +282,4 @@ Surveillance System, 2015 survey data and codebook,''
 \end{thebibliography}
 
 \end{document}
+
